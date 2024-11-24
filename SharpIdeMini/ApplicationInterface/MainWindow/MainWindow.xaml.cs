@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -28,10 +29,34 @@ namespace SharpIdeMini.ApplicationInterface.MainWindow
             if (e.IsTerminating)
             {
                 Exception exception = (Exception)e.ExceptionObject;
-                string MessageContents = string.Format("Program faulted by unhandled exception :\n{0} : {1}\nSee detailed information in \"latest.log\"", exception.GetType().Name, exception.Message);
-                MessageBox.Show(MessageContents);
                 File.WriteAllText("latest.log", exception.ToString());
+
+                string MessageContents = string.Format("Program faulted by unhandled exception :\n{0} : {1}\nSee detailed information in \"latest.log\"\nOpen log file?", exception.GetType().Name, exception.Message);
+                if (MessageBox.Show(MessageContents, "Program faulted", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    OpenLastLog();
+
                 Environment.Exit(exception.HResult);
+            }
+        }
+
+        private void OpenLastLog()
+        {
+            try
+            {
+                Process opeProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = Path.Combine(Environment.CurrentDirectory, "latest.log"),
+                        UseShellExecute = true
+                    }
+                };
+
+                opeProcess.Start();
+            }
+            catch
+            {
+
             }
         }
 

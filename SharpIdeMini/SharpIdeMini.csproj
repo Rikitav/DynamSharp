@@ -5,7 +5,13 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <AssemblyName>DynamSharp</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />

@@ -8,6 +8,7 @@
     <FontFamily x:Key="CurrentFont">Cascadia Mono</FontFamily>
     <SolidColorBrush x:Key="MainColorBrush">#1f1f1f</SolidColorBrush>
     <SolidColorBrush x:Key="AcsentColorBrush">#2e2e2e</SolidColorBrush>
+    <SolidColorBrush x:Key="MinorColorBrush">#3d3d3d</SolidColorBrush>
     <SolidColorBrush x:Key="LogoColor">#822c97</SolidColorBrush>
 
     <Style x:Key="ToolBoxThemedCheckBox" TargetType="CheckBox" BasedOn="{StaticResource ThemedCheckBoxBaseStyle}">
@@ -18,10 +19,11 @@
 
     <Style x:Key="ToolBoxThemedButton" TargetType="Button"  BasedOn="{StaticResource ThemedButtonBaseStyle}">
         <Setter Property="BorderBrush" Value="{StaticResource LogoColor}"/>
-        <Setter Property="Background" Value="{StaticResource AcsentColorBrush}"/>
+        <Setter Property="Background" Value="{StaticResource MinorColorBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="5,5,0,5"/>
         <Setter Property="Width" Value="150"/>
+        <Setter Property="Height" Value="22"/>
     </Style>
 </ResourceDictionary>

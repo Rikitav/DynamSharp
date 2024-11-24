@@ -1,7 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.Win32;
 using SharpIdeMini.ApplicationInterface.ModelBase;
 using SharpIdeMini.Compilation;
+using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,14 +34,26 @@ namespace SharpIdeMini.ApplicationInterface.MainWindow
         // Commands fields
         private RelayCommand? _compileCommand;
         private RelayCommand? _executeCommand;
+        private RelayCommand? _readFileContent;
+        private RelayCommand? _saveContentFile;
+
+        // File dialogs
+        private readonly OpenFileDialog _openFile = new OpenFileDialog()
+        {
+            Filter = "C# source code|*.cs",
+            CheckFileExists = true,
+            Multiselect = false
+        };
+
+        private readonly SaveFileDialog _saveFile = new SaveFileDialog()
+        {
+            Filter = "C# source code|*.cs",
+            CheckFileExists = false
+        };
 
         // Messages
-        private const string MessageBox_NullScript = "Failed to compile code inside editor.\nScript is null";
-        private const string MessageBox_CompilationFailed = "Failed to compile code inside editor.\nPlease check for errors in output box";
-        private const string MessageBox_NoSourceCode = "No source code was speccified";
-        private const string OutputMessage_NullScript = "{ ERROR : Script instance is null, recompile code }";
-        private const string OutputMessage_NoSourceCode = "{ ERROR : Script is empty, type some }";
-        private const string OutputMessage_NoChanges = "{ ERROR : No changes was made, no need to recompile }";
+        private const string OutputMessage_NullScript = "{ ENVIRONMENT_ERROR : Script instance is null, recompile code }";
+        private const string OutputMessage_NoChanges = "{ ENVIRONMENT_ERROR : No changes was made, no need to recompile }";
 
         public bool ScriptWorking
         {
@@ -85,7 +100,7 @@ namespace SharpIdeMini.ApplicationInterface.MainWindow
                     RunLastScript();
                     await Task.Yield();
                 });
-            }, _ => !_scriptWorking & !_compilerWorking);
+            });
         }
 
         public RelayCommand CompileCommand
@@ -99,6 +114,16 @@ namespace SharpIdeMini.ApplicationInterface.MainWindow
                     await Task.Yield();
                 });
             }, _ => !_compilerWorking);
+        }
+
+        public RelayCommand ReadFileContent
+        {
+            get => _readFileContent ??= new RelayCommand(_ => ReadContentFromFile());
+        }
+
+        public RelayCommand SaveContentFile
+        {
+            get => _saveContentFile ??= new RelayCommand(_ => SaveEditorContentToFile());
         }
 
         public MainWindowViewModel()
@@ -174,6 +199,40 @@ namespace SharpIdeMini.ApplicationInterface.MainWindow
             finally
             {
                 ScriptWorking = false;
+            }
+        }
+
+        private void ReadContentFromFile()
+        {
+            try
+            {
+                if (!(_openFile.ShowDialog() ?? false))
+                {
+                    MessageBox.Show("No file selected");
+                    return;
+                }
+
+                EditorText = File.ReadAllText(_openFile.FileName);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Failed to read file contents");
+            }
+        }
+
+        private void SaveEditorContentToFile()
+        {
+            try
+            {
+                if (!(_saveFile.ShowDialog() ?? false))
+                {
+                    MessageBox.Show("No file selected");
+                    return;
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Failed to save script to file\n\n" + exc.ToString());
             }
         }
 
