@@ -1,0 +1,64 @@
+﻿<Window x:Class="SharpIdeMini.ApplicationInterface.MainWindow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SharpIdeMini.ApplicationInterface.MainWindow"
+        xmlns:converters="clr-namespace:SharpIdeMini.ApplicationInterface.Converters"
+        xmlns:controls="clr-namespace:SharpIdeMini.ApplicationInterface.Controls"
+        mc:Ignorable="d"
+        Title="C# MiniIDE" Height="450" Width="800" Background="{StaticResource MainColorBrush}" FontFamily="{StaticResource CurrentFont}">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <converters:BooleanToVisiblityConverter x:Key="BooleanToVisiblityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
+    
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Column="0" Grid.Row="0" Background="{StaticResource AcsentColorBrush}" CornerRadius="15,0,0,15">
+            <DockPanel Margin="10">
+                <Label DockPanel.Dock="Top" Content="Code editor :" Foreground="White" FontFamily="{StaticResource CurrentFont}"/>
+                <Border BorderThickness="1" BorderBrush="{StaticResource LogoColor}" CornerRadius="3">
+                    <controls:AvalonCodeEditor Text="{Binding EditorText}" Background="Transparent" Foreground="White" BorderThickness="0" ShowLineNumbers="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" FontFamily="{StaticResource CurrentFont}"/>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1" Grid.Row="0" Background="{StaticResource AcsentColorBrush}" CornerRadius="0,15,15,0">
+            <DockPanel Margin="10">
+                <Label DockPanel.Dock="Top" Content="Executing output :" Foreground="White" FontFamily="Cascadia Mono"/>
+                <Border BorderThickness="1" BorderBrush="{StaticResource LogoColor}" CornerRadius="3">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding OutputText}" Background="Transparent" Foreground="White" FontFamily="{StaticResource CurrentFont}"/>
+                    </ScrollViewer>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <DockPanel Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid DockPanel.Dock="Right">
+                <Label Content="Compiling..." FontFamily="Cascadia Mono" Foreground="White" Visibility="{Binding CompilerWorking, Converter={StaticResource BooleanToVisiblityConverter}}"/>
+                <Label Content="Executing..." FontFamily="Cascadia Mono" Foreground="White" Visibility="{Binding ScriptWorking, Converter={StaticResource BooleanToVisiblityConverter}}"/>
+            </Grid>
+            
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Compile script" Style="{StaticResource ToolBoxThemedButton}" Command="{Binding CompileCommand}" IsEnabled="{Binding AutoCompileCheck, Converter={StaticResource InverseBooleanConverter}}"/>
+                <Button Content="Run last script" Style="{StaticResource ToolBoxThemedButton}" Command="{Binding ExecuteCommand}"/>
+                <CheckBox Content="Auto compile" Style="{StaticResource ToolBoxThemedCheckBox}" IsChecked="{Binding AutoCompileCheck, Mode=OneWayToSource}"/>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

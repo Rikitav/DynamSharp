@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Styles\ThemedCheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="Styles\ThemedButtonStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <FontFamily x:Key="CurrentFont">Cascadia Mono</FontFamily>
+    <SolidColorBrush x:Key="MainColorBrush">#1f1f1f</SolidColorBrush>
+    <SolidColorBrush x:Key="AcsentColorBrush">#2e2e2e</SolidColorBrush>
+    <SolidColorBrush x:Key="LogoColor">#822c97</SolidColorBrush>
+
+    <Style x:Key="ToolBoxThemedCheckBox" TargetType="CheckBox" BasedOn="{StaticResource ThemedCheckBoxBaseStyle}">
+        <Setter Property="Background" Value="{StaticResource LogoColor}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5,5,0,5"/>
+    </Style>
+
+    <Style x:Key="ToolBoxThemedButton" TargetType="Button"  BasedOn="{StaticResource ThemedButtonBaseStyle}">
+        <Setter Property="BorderBrush" Value="{StaticResource LogoColor}"/>
+        <Setter Property="Background" Value="{StaticResource AcsentColorBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5,5,0,5"/>
+        <Setter Property="Width" Value="150"/>
+    </Style>
+</ResourceDictionary>
